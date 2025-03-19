@@ -1,0 +1,70 @@
+I am working on an application with the following stack:
+- Go Backend
+- SQLite Database
+
+You are my coding assistant. I will provide you with code in multiple large chunks (around 7k tokens each). After I paste each chunk, do not provide any analysis or commentary. Simply respond with the letter "y" to acknowledge receipt. Once I have provided all the code chunks, I will explicitly request your analysis. Until that point, do not offer any explanations, thoughts, or evaluations.
+
+Understood?
+
+=== End of prompts/instructions.md ===
+
+// internal/adapters/repositories/user.go
+package repositories
+
+import (
+	"github.com/robstave/go-template/internal/domain/types"
+	"gorm.io/gorm"
+)
+
+type Repository interface {
+	GetWidgetById(id string) (*types.Widget, error)
+	GetAllWidgets() ([]types.Widget, error)
+	CreateWidget(widget types.Widget) error
+	UpdateWidget(widget types.Widget) error
+	DeleteWidget(id string) error
+}
+
+type RepositorySQLite struct {
+	db *gorm.DB
+}
+
+func NewRepositorySQLite(db *gorm.DB) Repository {
+	return &RepositorySQLite{db: db}
+}
+
+func (r *RepositorySQLite) GetWidgetById(id string) (*types.Widget, error) {
+	var widget types.Widget
+	result := r.db.First(&widget, "id = ?", id)
+	if result.Error != nil {
+		if result.Error == gorm.ErrRecordNotFound {
+			return nil, nil
+		}
+		return nil, result.Error
+	}
+	return &widget, nil
+}
+
+func (r *RepositorySQLite) GetAllWidgets() ([]types.Widget, error) {
+	var widgets []types.Widget
+	result := r.db.Find(&widgets)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return widgets, nil
+}
+
+func (r *RepositorySQLite) CreateWidget(widget types.Widget) error {
+	return r.db.Create(&widget).Error
+}
+
+func (r *RepositorySQLite) UpdateWidget(widget types.Widget) error {
+	return r.db.Save(&widget).Error
+}
+
+func (r *RepositorySQLite) DeleteWidget(id string) error {
+	return r.db.Delete(&types.Widget{}, "id = ?", id).Error
+}
+
+
+=== End of internal/adapters/repositories/repository.go ===
+

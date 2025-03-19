@@ -1,0 +1,20 @@
+#readme.md
+# This file contains a list of files and directories in the project.
+bk-controllers1:
+  - prompts/instructions.md
+  - internal/adapters/controller/widget.go
+  - internal/adapters/controller/controller.go
+  
+bk-repo:
+  - prompts/instructions.md
+  - internal/adapters/repositories/repository.go
+
+bk-domain1:
+  - prompts/instructions.md
+  - cmd/main/main.go
+  - internal/domain/types/widget.go
+  - internal/domain/seeder.go
+  - internal/domain/service.go
+  - internal/domain/widgets.go
+
+ 
